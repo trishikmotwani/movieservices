@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.*;
 import java.util.Optional;
 
-@CrossOrigin(origins = { "http://localhost:3000", "http://localhost:4200" })
+@CrossOrigin
 @RestController
 @RequestMapping("/movies")
 class GroupController {
