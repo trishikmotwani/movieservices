@@ -78,21 +78,25 @@ class GroupController {
 		}
     }
     
-    @PutMapping("/update/{id}")
-    ResponseEntity<Movie> updateMovie(@Valid @RequestBody Movie movie) {
-        log.info("Request to update movie: {}", movie);
-        Movie updatedMovie = movieRepository.save(movie);
-        if(updatedMovie.getGenre().size() > 0) {
-        	for(Genre g: updatedMovie.getGenre()) {
-        		g.setMovie(updatedMovie);
-        		genreRepository.save(g);
-        		
-        	};
-        }
-		if (updatedMovie == null) {	
-			return new ResponseEntity<Movie>(updatedMovie,HttpStatus.INTERNAL_SERVER_ERROR);
+    @PutMapping("/update")
+    ResponseEntity<Movie> updateMovie(@Valid @RequestBody Movie movie_) {
+        log.info("Request to update movie: {}", movie_);
+        Movie updatedMovie = null;
+        Optional<Movie> movie = movieRepository.findById(movie_.getMovie_id());
+        if(movie != null) {
+        	updatedMovie = movieRepository.save(movie_);
+	        if(updatedMovie.getGenre().size() > 0) {
+	        	for(Genre g: updatedMovie.getGenre()) {
+	        		g.setMovie(updatedMovie);
+	        		genreRepository.save(g);
+	        		
+	        	};
+	        }
+        	return new ResponseEntity<Movie>(updatedMovie, HttpStatus.OK);
+	    } else {
+			return new ResponseEntity<Movie>(updatedMovie, HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<Movie>(updatedMovie, HttpStatus.OK);
+		
     }
 
     @DeleteMapping("/delete/{id}")
